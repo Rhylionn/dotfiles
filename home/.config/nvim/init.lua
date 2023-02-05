@@ -1,0 +1,5 @@
+require("usr.plugins-setup")
+require("usr.core.options")
+require("usr.core.keymaps")
+require("usr.core.colorscheme")
+require("usr.plugins.lualine")
