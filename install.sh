@@ -24,7 +24,7 @@ dnf upgrade -y
 read -p "[?] Do you want to install zsh and Oh My Zsh ? (y/n) " installZsh
 
 if [ "$installZsh" = "y" ]; then
-	dnf install zsh
+	dnf install -y zsh
 	git clone https://github.com/ohmyzsh/ohmyzsh.git /home/$username/.oh-my-zsh
 	cp /home/$username/.oh-my-zsh/templates/zshrc.zsh-template /home/$username/.zshrc
 
@@ -34,17 +34,22 @@ if [ "$installZsh" = "y" ]; then
 
   read -p "[?] Do you want to install p10k ? (y/n) " installP10k
 	
-	if [ "$installP10k" = "y" ]
+	if [ "$installP10k" = "y" ]; then
 		git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-/home/$username/.oh-my-zsh/custom}/themes/powerlevel10k
 		sed -i 's/ZSH_THEME=.*/ZSH_THEME="powerlevel10k\/powerlevel10k"/' /home/$username/.zshrc
 
+  fi
+  dnf install -y chsh
 	chsh -s $(which zsh) $username
+fi
 
 echo "[*] Installing core dependencies"
 dnf group -y install "C Development Tools and Libraries"
 
 echo "[*] Installation of basic tools"
-dnf install -y nvim terminator curl htop git gparted openvpn docker docker-compose 
+dnf install -y neovim terminator curl htop git gparted openvpn docker docker-compose 
+
+usermod -aG docker $username
 
 echo "[*] Installing python"
 dnf install -y python3 python3-pip
@@ -89,4 +94,4 @@ git clone --depth 1 https://github.com/sqlmapproject/sqlmap.git ./webapps/sqlmap
 gem install wpscan
 
 echo "[*] Installing social engineering tools"
-git clone https://github.com/trustedsec/social-engineer-toolkit ./social-engineering/social-engineer-toolkit && pip install -r social-engineer-toolkit/requirements.txt && sudo python3 social-engineer-toolkit/setup.py 
+git clone https://github.com/trustedsec/social-engineer-toolkit ./social-engineering/social-engineer-toolkit && pip install -r ./social-engineering/social-engineer-toolkit/requirements.txt && sudo python3 ./social-engineering/social-engineer-toolkit/setup.py
