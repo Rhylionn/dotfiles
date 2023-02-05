@@ -21,16 +21,20 @@ echo "[*] System updates"
 dnf update -y
 dnf upgrade -y
 
-read -p "[?] Do you want to install zsh and Oh My Zsh ?" installZsh
+read -p "[?] Do you want to install zsh and Oh My Zsh ? (y/n) " installZsh
 
-if [ $installZsh = true ]
-then
+if [ "$installZsh" = "y" ]; then
 	dnf install zsh
 	git clone https://github.com/ohmyzsh/ohmyzsh.git /home/$username/.oh-my-zsh
 	cp /home/$username/.oh-my-zsh/templates/zshrc.zsh-template /home/$username/.zshrc
-	read -p "[?] Do you want to install p10k ? " installP10k
+
+  echo "[*] Installing omz plugins"
+  git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-/home/$username/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+  git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-/home/$username/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+
+  read -p "[?] Do you want to install p10k ? (y/n) " installP10k
 	
-	if [ $installP10k = true ]
+	if [ "$installP10k" = "y" ]
 		git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-/home/$username/.oh-my-zsh/custom}/themes/powerlevel10k
 		sed -i 's/ZSH_THEME=.*/ZSH_THEME="powerlevel10k\/powerlevel10k"/' /home/$username/.zshrc
 
