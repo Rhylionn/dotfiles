@@ -1,0 +1,28 @@
+[global_config]
+[keybindings]
+  go_prev = <Alt>h
+  go_up = <Alt>k
+  go_down = <Alt>j
+  go_right = <Alt>l
+  split_horiz = <Alt>s
+  split_vert = <Alt>d
+  close_term = <Alt>z
+  layout_launcher = None
+[profiles]
+  [[default]]
+    background_color = "#1e1e1e"
+    cursor_color = "#aaaaaa"
+    font = Hack Nerd Font 12
+    show_titlebar = False
+    scrollback_infinite = True
+    use_system_font = False
+[layouts]
+  [[default]]
+    [[[window0]]]
+      type = Window
+      parent = ""
+      size = 1000, 600
+    [[[child1]]]
+      type = Terminal
+      parent = window0
+[plugins]
