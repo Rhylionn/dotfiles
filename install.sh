@@ -25,9 +25,8 @@ read -p "[?] Install zsh and Oh My Zsh ? (y/n) " installZsh
 if [ "$installZsh" = "y" ]; then
 	
   read -p "[!] A nerd font need to be installed! Install Hack NF (or install one on your own) ? (y/n) " installHack
-
   if [ "$installHack" = "y" ]; then
-    mkdir -p /home/$username/share/fonts
+    mkdir -p /home/$username/.local/share/fonts
     wget "https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/Hack.zip" -P /tmp && unzip /tmp/Hack.zip -d /tmp/Hack
     find /tmp/Hack -name "*Nerd Font Complete.ttf" -exec mv -t /home/$username/.local/share/fonts/ {} +
   fi
@@ -42,8 +41,8 @@ if [ "$installZsh" = "y" ]; then
   echo "[*] Installing omz plugins"
   git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-/home/$username/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
   git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-/home/$username/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-  # Need to add plugins + fzf to plugins=(git zsh-autosuggestions zsh-syntax-highlighting fzf)
-  sed -i 's/^plugins=\(.*\)$/plugins=(git zsh-autosuggestions zsh-syntax-highlighting fzf)/' .zshrc
+
+  sed -i 's/^plugins=\(.*\)$/plugins=(git zsh-autosuggestions zsh-syntax-highlighting fzf)/' /home/$username/.zshrc
 
   read -p "[?] Do you want to install p10k ? (y/n) " installP10k
 	
@@ -65,7 +64,7 @@ echo "[*] Installing flatpak and applications"
 dnf install flatpak
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 
-flatpak install -y flathub con.bitwarden.desktop com.discordapp.Discord md.obsidian.Obsidian org.telegram.desktop
+flatpak install -y flathub com.bitwarden.desktop com.discordapp.Discord md.obsidian.Obsidian org.telegram.desktop
 
 echo "[*] Installation of basic tools"
 dnf install -y neovim terminator curl htop git gparted openvpn neofetch perl-Image-ExifTool 
@@ -76,12 +75,10 @@ dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce
 dnf install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
 usermod -aG docker $username
 
-echo "[*] Installing vscode"
+# TODO: Vscode/Brave/Node / npm
 
 echo "[*] Installing python"
 dnf install -y python3 python3-pip
-
-# Node / npm
 
 echo "[*] Installing ruby and ruby gems"
 dnf install -y ruby ruby-devel rubygems
@@ -102,8 +99,12 @@ echo "[*] Installation of burpsuite"
 # https://portswigger-cdn.net/burp/releases/download?product=community&version=2022.12.7&type=Linux
 
 echo "[*] Downloading wordlists"
-git clone https://github.com/danielmiessler/SecLists ./wordlists/SecLists
-git clone https://github.com/digininja/CeWL ./wordlists/CeWL && cd ./wordlists/CeWL && bundle install
+cd /opt/$toolsdirectory/wordlists
+git clone https://github.com/danielmiessler/SecLists
+git clone https://github.com/Mebus/cupp
+git clone https://github.com/digininja/CeWL CeWL && cd CeWL && bundle install
+
+cd /opt/$toolsdirectory/
 
 echo "[*] Installing metasploit"
 curl https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb > /tmp/msfinstall
@@ -111,24 +112,29 @@ chmod +x /tmp/msfinstall
 /tmp/./msfinstall
 
 echo "[*] Installing recon tools"
-git clone https://github.com/laramies/theHarvester ./recon/theHarvester
-git clone https://github.com/aboul3la/Sublist3r ./recon/Sublist3r
-git clone https://github.com/lanmaster53/recon-ng ./recon/recon-ng
-git clone https://github.com/laramies/metagoofil ./recon/metagoofil
-git clone https://github.com/darkoperator/dnsrecon ./recon/dnsrecon
+cd /opt/$toolsdirectory/recon/
+git clone https://github.com/laramies/theHarvester
+git clone https://github.com/aboul3la/Sublist3r
+git clone https://github.com/lanmaster53/recon-ng 
+git clone https://github.com/laramies/metagoofil 
+git clone https://github.com/darkoperator/dnsrecon
 
 echo "[*] Installing social engineering tools"
-git clone https://github.com/trustedsec/social-engineer-toolkit ./social-engineering/setoolkit && pip install -r ./social-engineering/setoolkit/requirements.txt && python ./social-engineering/setoolkit/setup.py
-git clone https://github.com/Mebus/cupp ./social-engineering/cupp
+cd /opt/$toolsdirectory/social-engineering/ 
+git clone https://github.com/trustedsec/social-engineer-toolkit setoolkit/ && cd setoolkit && pip install -r requirements.txt && python setup.py
 
 
 echo "[*] Installing web application pentest tools"
+cd /opt/$toolsdirectory/webapps/
 dnf install -y nikto gobuster wfuzz
-git clone --depth 1 https://github.com/sqlmapproject/sqlmap.git ./webapps/sqlmap
+git clone --depth 1 https://github.com/sqlmapproject/sqlmap.git
 gem install wpscan
 
 echo "[*] Installing post exploitation tools"
-git clone https://github.com/fortra/impacket ./postexploitation/impacket && python3 -m pip install ./postexploitation/impacket
+cd /opt/$toolsdirectory/postexploitation/
+git clone https://github.com/fortra/impacket && python3 -m pip install impacket/
 
+
+cd /
 echo "[*] Fixing permissions"
 chown -R $username:$username /opt/$toolsdirectory
