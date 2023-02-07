@@ -2,14 +2,14 @@
 # Made by rhylionn
 
 if [ "$EUID" -ne 0 ]; then
-	echo "[!] The script must be run as root"
-	exit
+  echo "[!] The script must be run as root"
+  exit
 fi
 
 read -p "[!] This script made for fedora distributions, continue ? (y/n) " continueInstall
 
 if [ "$continueInstall" != "y" ]; then
-	exit
+  exit
 fi
 
 
@@ -33,12 +33,12 @@ if [ "$installZsh" = "y" ]; then
   find /tmp/Hack -name "*Nerd Font Complete.ttf" -exec mv -t /home/$username/.local/share/fonts/ {} +
 
   # FiraCode
-  wget "https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/FiraCode.zip" -P /tmp && unzip /tmp/Firacode.zip -d /tmp/Firacode
-  find /tmp/Firacode -name "*Nerd Font Complete.ttf" -exec mv -t /home/$username/.local/share/fonts/ {} +
+  wget "https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/FiraCode.zip" -P /tmp && unzip /tmp/FiraCode.zip -d /tmp/FiraCode
+  find /tmp/FiraCode -name "*Nerd Font Complete.ttf" -exec mv -t /home/$username/.local/share/fonts/ {} +
 
   dnf install -y zsh fzf bat exa
-	git clone https://github.com/ohmyzsh/ohmyzsh.git /home/$username/.oh-my-zsh
-	cp /home/$username/.oh-my-zsh/templates/zshrc.zsh-template /home/$username/.zshrc
+  git clone https://github.com/ohmyzsh/ohmyzsh.git /home/$username/.oh-my-zsh
+  cp /home/$username/.oh-my-zsh/templates/zshrc.zsh-template /home/$username/.zshrc
   
   echo "alias cat='bat'" >> /home/$username/.zshrc 
   echo "alias ls='exa'" >> /home/$username/.zshrc
@@ -51,9 +51,9 @@ if [ "$installZsh" = "y" ]; then
 
   read -p "[?] Do you want to install p10k ? (y/n) " installP10k
 	
-	if [ "$installP10k" = "y" ]; then
-		git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-/home/$username/.oh-my-zsh/custom}/themes/powerlevel10k
-		sed -i 's/ZSH_THEME=.*/ZSH_THEME="powerlevel10k\/powerlevel10k"/' /home/$username/.zshrc
+  if [ "$installP10k" = "y" ]; then
+    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-/home/$username/.oh-my-zsh/custom}/themes/powerlevel10k
+    sed -i 's/ZSH_THEME=.*/ZSH_THEME="powerlevel10k\/powerlevel10k"/' /home/$username/.zshrc
 
     read -p "[?] Do you want to install Rhylionn’s zshrc and terminator configuration ? (y/n) " copyZshrc
     
@@ -66,11 +66,10 @@ if [ "$installZsh" = "y" ]; then
     if [ "$copyNeovim" = "y" ]; then
       cp home/.config/nvim /home/$username/.config/
     fi
-
   fi
  
   dnf install -y util-linux-user
-	chsh -s $(which zsh) $username
+  chsh -s $(which zsh) $username
 fi
 
 echo "[*] Installing core dependencies"
@@ -103,12 +102,9 @@ echo "[*] Installation of basic tools"
 dnf install -y neovim terminator curl htop git gparted openvpn neofetch perl-Image-ExifTool 
 
 echo "[*] Installing docker"
-# Docker
 dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
 dnf install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
 usermod -aG docker $username
-
-# TODO: Vscode/Brave/Node / npm
 
 echo "[*] Installing python"
 dnf install -y python3 python3-pip
@@ -129,7 +125,7 @@ echo "[*] Installation of basic pentest tools"
 dnf install -y nmap hping3 hydra aircrack-ng ettercap tcpdump john wireshark
 
 echo "[*] Installation of burpsuite"
-wget "https://portswigger-cdn.net/burp/releases/download?product=community&type=Linux" -P /tmp/burpsuite.sh && chmod +x /tmp/burpsuite.sh && /tmp/./burpsuite.sh
+wget "https://portswigger-cdn.net/burp/releases/download?product=community&type=Linux" -O /tmp/burpsuite.sh && chmod +x /tmp/burpsuite.sh && /tmp/./burpsuite.sh
 
 echo "[*] Downloading wordlists"
 cd /opt/$toolsdirectory/wordlists
