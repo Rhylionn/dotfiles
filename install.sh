@@ -6,14 +6,14 @@ if [ "$EUID" -ne 0 ]; then
   exit
 fi
 
-read -p $'\e[1;31m[!] This script made for fedora distributions, continue ? (y/n)\e[0m ' continueInstall
+read -p $'\n\e[1;31m[!] This script made for fedora distributions, continue ? (y/n)\e[0m ' continueInstall
 
 if [ "$continueInstall" != "y" ]; then
   exit
 fi
 
-read -p $'\ne[1;32m[?] Username (for permissions):\e[0m ' username
-read -p $'\ne[1;32m[?] Tool installation directory: (will be under /opt/<directory>) \e[0m' toolsdirectory
+read -p $'\n\e[1;32m[?] Username (for permissions):\e[0m ' username
+read -p $'\n\e[1;32m[?] Tool installation directory: (will be under /opt/<directory>) \e[0m' toolsdirectory
 
 echo $'\n\e[1;34m[*] System updates\e[0m\n'
 dnf update -y
@@ -21,7 +21,7 @@ dnf upgrade -y
 
 dnf install -y util-linux-user
 
-read -p $'\ne[1;32m[?] Install zsh and Oh My Zsh ? (y/n) \e[0m\n' installZsh
+read -p $'\n\e[1;32m[?] Install zsh and Oh My Zsh ? (y/n) \e[0m\n' installZsh
 
 if [ "$installZsh" = "y" ]; then
 
@@ -50,19 +50,19 @@ if [ "$installZsh" = "y" ]; then
 
   sed -i 's/^plugins=\(.*\)$/plugins=(git zsh-autosuggestions zsh-syntax-highlighting fzf)/' /home/$username/.zshrc
 
-  read -p $'\ne[1;32m[?] Do you want to install p10k ? (y/n)\e[0m ' installP10k
+  read -p $'\n\e[1;32m[?] Do you want to install p10k ? (y/n)\e[0m ' installP10k
 	
   if [ "$installP10k" = "y" ]; then
     git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-/home/$username/.oh-my-zsh/custom}/themes/powerlevel10k
     sed -i 's/ZSH_THEME=.*/ZSH_THEME="powerlevel10k\/powerlevel10k"/' /home/$username/.zshrc
 
-    read -p $'\ne[1;32m[?] Do you want to install Rhylionn’s zshrc and terminator configuration ? (y/n)\e[0m ' copyZshrc
+    read -p $'\n\e[1;32m[?] Do you want to install Rhylionn’s zshrc and terminator configuration ? (y/n)\e[0m ' copyZshrc
     
     if [ "$copyZshrc" = "y" ]; then
       cp home/.zshrc /home/$username/ && cp -r home/.config/terminator /home/$username/.config/
     fi
 
-    read -p $'\ne[1;32m[?] Do you want to install Rhylionn’s neovim configuration (y/n) ?\e[0m ' copyNeovim
+    read -p $'\n\e[1;32m[?] Do you want to install Rhylionn’s neovim configuration (y/n) ?\e[0m ' copyNeovim
 
     if [ "$copyNeovim" = "y" ]; then
       cp -r home/.config/nvim /home/$username/.config/
