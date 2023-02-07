@@ -13,7 +13,7 @@ if [ "$continueInstall" != "y" ]; then
 fi
 
 
-read -p "[?] Username (for permissions): "  username
+read -p "[?] Username (for permissions): " username
 read -p "[?] Tool installation directory: (will be under /opt/<directory>) " toolsdirectory
 
 echo "[*] System updates"
@@ -23,13 +23,18 @@ dnf upgrade -y
 read -p "[?] Install zsh and Oh My Zsh ? (y/n) " installZsh
 
 if [ "$installZsh" = "y" ]; then
-	
-  read -p "[!] A nerd font need to be installed! Install Hack NF (or install one on your own) ? (y/n) " installHack
-  if [ "$installHack" = "y" ]; then
-    mkdir -p /home/$username/.local/share/fonts
-    wget "https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/Hack.zip" -P /tmp && unzip /tmp/Hack.zip -d /tmp/Hack
-    find /tmp/Hack -name "*Nerd Font Complete.ttf" -exec mv -t /home/$username/.local/share/fonts/ {} +
-  fi
+
+  echo "[*] Installing Nerd Fonts"
+
+  mkdir -p /home/$username/.local/share/fonts
+
+  # Hack
+  wget "https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/Hack.zip" -P /tmp && unzip /tmp/Hack.zip -d /tmp/Hack
+  find /tmp/Hack -name "*Nerd Font Complete.ttf" -exec mv -t /home/$username/.local/share/fonts/ {} +
+
+  # FiraCode
+  wget "https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/FiraCode.zip" -P /tmp && unzip /tmp/Firacode.zip -d /tmp/Firacode
+  find /tmp/Firacode -name "*Nerd Font Complete.ttf" -exec mv -t /home/$username/.local/share/fonts/ {} +
 
   dnf install -y zsh fzf bat exa
 	git clone https://github.com/ohmyzsh/ohmyzsh.git /home/$username/.oh-my-zsh
@@ -50,7 +55,20 @@ if [ "$installZsh" = "y" ]; then
 		git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-/home/$username/.oh-my-zsh/custom}/themes/powerlevel10k
 		sed -i 's/ZSH_THEME=.*/ZSH_THEME="powerlevel10k\/powerlevel10k"/' /home/$username/.zshrc
 
+    read -p "[?] Do you want to install Rhylionn’s zshrc and terminator configuration ? (y/n) " copyZshrc
+    
+    if [ "$copyZshrc" = "y" ]; then
+      cp home/.zshrc /home/$username/ && cp -r home/.config/terminator /home/$username/.config/
+    fi
+
+    read -p "[?] Do you want to install Rhylionn’s neovim configuration (y/n) ? " copyNeovim
+
+    if [ "$copyNeovim" = "y" ]; then
+      cp home/.config/nvim /home/$username/.config/
+    fi
+
   fi
+ 
   dnf install -y util-linux-user
 	chsh -s $(which zsh) $username
 fi
@@ -65,6 +83,21 @@ dnf install flatpak
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 
 flatpak install -y flathub com.bitwarden.desktop com.discordapp.Discord md.obsidian.Obsidian org.telegram.desktop
+
+echo "[*] Installing base apps"
+
+echo "[*] Installing brave browser"
+
+dnf config-manager --add-repo https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo
+rpm --import https://brave-browser-rpm-release.s3.brave.com/brave-core.asc
+dnf install -y brave-browser
+
+echo "[*] Installing vscode"
+
+rpm --import https://packages.microsoft.com/keys/microsoft.asc
+sh -c 'echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/vscode.repo'
+dnf update -y
+dnf install -y code
 
 echo "[*] Installation of basic tools"
 dnf install -y neovim terminator curl htop git gparted openvpn neofetch perl-Image-ExifTool 
@@ -96,7 +129,7 @@ echo "[*] Installation of basic pentest tools"
 dnf install -y nmap hping3 hydra aircrack-ng ettercap tcpdump john wireshark
 
 echo "[*] Installation of burpsuite"
-# https://portswigger-cdn.net/burp/releases/download?product=community&version=2022.12.7&type=Linux
+wget "https://portswigger-cdn.net/burp/releases/download?product=community&type=Linux" -P /tmp/burpsuite.sh && chmod +x /tmp/burpsuite.sh && /tmp/./burpsuite.sh
 
 echo "[*] Downloading wordlists"
 cd /opt/$toolsdirectory/wordlists
@@ -134,7 +167,10 @@ echo "[*] Installing post exploitation tools"
 cd /opt/$toolsdirectory/postexploitation/
 git clone https://github.com/fortra/impacket && python3 -m pip install impacket/
 
-
 cd /
+
+echo "[*] Clearing"
+rm -rf /tmp/*
+
 echo "[*] Fixing permissions"
 chown -R $username:$username /opt/$toolsdirectory
