@@ -22,11 +22,11 @@ git clone https://github.com/Rhylionn/dotfiles && cd dotfiles && sudo ./install.
 
 ## Default installed applications
 
-By default, the script will install: *Brave Browser* and *Vscode*. *Discord*, *Telegram* and *Bitwarden desktop* are also installed through flatpak.
+By default, the script will install: **Brave Browser** and **Vscode**. **Discord**, **Telegram** and **Bitwarden desktop** are also installed through flatpak.
 
 ## Terminal and appearance
 
-The terminal runs under *zsh* with *Oh My Zsh* and *powerlevel10k* for styling. It also contains the following plugins:
+The terminal runs under **zsh** with **Oh My Zsh** and **powerlevel10k** for styling. It also contains the following plugins:
 
 | Plugin | Description |
 | --- | --- |
@@ -36,11 +36,11 @@ The terminal runs under *zsh* with *Oh My Zsh* and *powerlevel10k* for styling. 
 
 Aliases are also created to replace `ls` with `exa` and `cat` with `bat`.
 
-Two Nerd Fonts are downloaded: *Hack* (for the terminal) and *Firacode* (For vscode).
+Two Nerd Fonts are downloaded: **Hack** (for the terminal) and **Firacode** (For vscode).
 
 ## Neovim
 
-A minimalist neovim configuration is also added containing few options but only one plugin: *lualine*.
+A minimalist neovim configuration is also added containing few options but only one plugin: **lualine**.
 
 ## Cybersecurity tools
 
