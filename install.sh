@@ -164,8 +164,10 @@ git clone https://github.com/fortra/impacket && python3 -m pip install impacket/
 
 cd /
 
-echo $'\n\e[1;34m[*] Clearing\e[0m\n'
+echo $'\n\e[1;34m[*] Clearing\e[0m'
 rm -rf /tmp/*
 
-echo $'\n\e[1;34m[*] Fixing permissions\e[0m\n'
+echo $'\n\e[1;34m[*] Fixing permissions\e[0m'
 chown -R $username:$username /opt/$toolsdirectory
+
+echo $'\n\033[1;38;5;208mInstallation finished! You can now remove the folder.\033[0m\n'
