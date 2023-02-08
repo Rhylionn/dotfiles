@@ -21,7 +21,7 @@ dnf upgrade -y
 
 dnf install -y util-linux-user
 
-read -p $'\n\e[1;32m[?] Install zsh and Oh My Zsh ? (y/n) \e[0m\n' installZsh
+read -p $'\n\e[1;32m[?] Install zsh and Oh My Zsh ? (y/n) \e[0m ' installZsh
 
 if [ "$installZsh" = "y" ]; then
 
