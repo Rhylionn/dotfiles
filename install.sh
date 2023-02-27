@@ -13,10 +13,9 @@ if [ "$continueInstall" != "y" ]; then
 fi
 
 read -p $'\n\e[1;32m[?] Username (for permissions):\e[0m ' username
-read -p $'\n\e[1;32m[?] Tool installation directory: (will be under /opt/<directory>) \e[0m' toolsdirectory
+read -p $'\n\e[1;32m[?] Tool installation directory: (will be created under /opt/): \e[0m' toolsdirectory
 
 echo $'\n\e[1;34m[*] System updates\e[0m\n'
-dnf update -y
 dnf upgrade -y
 
 dnf install -y util-linux-user
@@ -80,7 +79,7 @@ dnf install -y dnf-plugins-core gnome-tweaks
 echo $'\n\e[1;34m[*] Installing flatpak and applications\e[0m\n'
 dnf install flatpak
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-
+flatpak remote-modify --enable flathub
 flatpak install -y flathub com.bitwarden.desktop com.discordapp.Discord md.obsidian.Obsidian org.telegram.desktop
 
 echo $'\n\e[1;34m[*] Installing base apps\e[0m\n'
